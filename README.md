@@ -1,5 +1,6 @@
 # pipex
 -/* Liens utiles */
+https://www.codequoi.com/pipe-une-methode-de-communication-inter-processus/
 https://tldp.org/LDP/lpg/node11.html
 https://n-pn.fr/t/2318-c--programmation-systeme-execve-fork-et-pipe
 https://www.youtube.com/watch?v=6xbLgZpOBi8 <-- pipe simulation
