@@ -14,23 +14,10 @@
 // STDIN_FILENO
 // STDOUT_FILENO
 
-// int ft_strlen(char *str)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while(str[i] != '\0')
-// 		i++;
-// 	return(i);
-// }
-
 void	write_str(int fd, const char *str)
 {
-	write(fd, str, ft_strlen(str));
+	write(fd, str, strlen(str));
 }
-
-
-
 
 int main(int ac, char **av)
 {
@@ -47,7 +34,7 @@ int main(int ac, char **av)
         perror("pipe");
         exit(EXIT_FAILURE);
     }
-    pid = fork;
+    pid = fork();
     if (pid == -1)
     {
         perror("pip");
@@ -65,7 +52,7 @@ int main(int ac, char **av)
         {
             write(STDOUT_FILENO, &buf, 1);//ecrie le caractere lu dans la sortie standar
         }
-        write_str(STDOUT_FILENO,"\"");
+        write_str(STDOUT_FILENO,"\"\n");
         write_str(STDOUT_FILENO,"Fils : je vais voir mon pere \n");
         // ferme le bout de lecture
         close(pipe_fd[0]);
@@ -77,12 +64,12 @@ int main(int ac, char **av)
         close(pipe_fd[0]);
         write_str(STDOUT_FILENO,"Pere : J'ecrit un secret sur le pipe\n");
         // ecrit dans le bout d'ecriture du pip
-        write_str(STDOUT_FILENO,"\e[33mJe suis ton pere !!!!");
+        write_str(pipe_fd[1],"\e[33mPere : Je suis ton pere !!!!\e[0m");
         //	Ferme le bout d'ecriture (lecteur verra EOF)
-		close(pipefd[1]);
+		close(pipe_fd[1]);
         //	Attend la terminaison du fils
 		wait(NULL);
-		writestr(STDOUT_FILENO, "Pere : Salut mon fils !\n");
+		write_str(STDOUT_FILENO, "Pere : Salut mon fils !\n");
 		exit(EXIT_SUCCESS);
 	}
 }
