@@ -19,7 +19,10 @@ endif
 
 
 SRCS		:=	pipex.c \
-				 
+				utils/ft_strlen.c \
+				ft_split.c \
+				ft_strjoin.c \
+				path_cmd.c \
 
 				
 				

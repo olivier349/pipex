@@ -1,22 +1,40 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oliove <olivierliove@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/25 02:47:43 by oliove            #+#    #+#             */
+/*   Updated: 2023/07/25 23:43:47 by oliove           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 
-
-
-int main(int ac, char **av)
+#include "header/util.h"
+//getenv
+int main(int ac, char **av, char **env)
 {
+    char *path = getenv("PATH"); 
+    printf("%s\n",path);
     if(ac < 5)
         return 1;
-    
     char *file1 = av[1];
-    char *cmd1 = av[2];
-    char *cmd2 = av[3];
+    char **cmd1 = ft_split(av[2],' ');
+    char **cmd2 = ft_split(av[3], ' ');
     char *file2 = av[4];
+    ft_path_dir(cmd1);
+    ft_path_dir(cmd2);
     
+    for (int i = 0; cmd1[i] ;i++)
+    {
+        printf("cmd1 : %s\n",cmd1[i]);
+    }
+    
+    for (int i = 0; cmd2[i] ;i++)
+    {
+        printf("cmd2 : %s\n",cmd2[i]);
+    }
     int fd_pipe[2];
     if (pipe(fd_pipe) == -1)
     {
@@ -38,6 +56,8 @@ int main(int ac, char **av)
             perror("open");
             exit(EXIT_FAILURE);
         }
+        for (int i = 0; cmd1[i]; i++)
+            printf("cmd1[%d] = %s\n", i, cmd1[i]);
         dup2(fd1, STDIN_FILENO);
         close(fd1);
         close(fd_pipe[0]);
@@ -45,10 +65,10 @@ int main(int ac, char **av)
         dup2(fd_pipe[1],STDOUT_FILENO);
         close(fd_pipe[1]);
 
-        char *cmd1_args[] = {cmd1, NULL};
-        execvp(cmd1, cmd1_args);
+        // char *cmd1_args[] = {cmd1, NULL};
+        execve(cmd1[0], cmd1,env);
         
-        perror("execvp cmd1");
+        perror("execve cmd1");
         return 1;
     }
 
@@ -61,6 +81,7 @@ int main(int ac, char **av)
     }
     if (pid2 == 0)// processus enfant 2(cmd2)
     {
+        dup2(fd_pipe[0], STDIN_FILENO);
         // ferme l'extremite d'ecriture du tube(inutiliser dans ce processus)
         close(fd_pipe[1]);
         int fd2 = open(file2,O_WRONLY | O_CREAT |O_TRUNC,0666);
@@ -72,11 +93,11 @@ int main(int ac, char **av)
         dup2(fd2,STDOUT_FILENO);
         close(fd2);
         // execute cmd2 dans le processuse enfant en remplacant son imagepar celle de cmd2
-        char *cmd2_args[] = {cmd2,NULL};
-        execvp(cmd2,cmd2_args);
+        // char *cmd2_args[] = {cmd2,NULL};
+        execve(cmd2[0],cmd2,env);
 
         // en cas d'erreur, perror affiche le message d'erreur appropie
-        perror("execvp cmd2");
+        perror("execve cmd2");
         return 1;
         
     }
