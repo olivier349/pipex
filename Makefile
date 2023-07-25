@@ -23,6 +23,9 @@ SRCS		:=	pipex.c \
 				ft_split.c \
 				ft_strjoin.c \
 				path_cmd.c \
+				father.c \
+				child.c \
+				ft_error.c \
 
 				
 				
