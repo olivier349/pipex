@@ -30,3 +30,25 @@ as stdin for cmd1                                 as stdout for cmd2
 
 External functs.
 • open, close, read, write, malloc, free, perror, strerror, access, dup, dup2, execve, exit, fork, pipe, unlink, wait, waitpid
+
+void	child(char **av, int *p_fd, char **env)
+{
+	int		fd;
+
+	fd = open_file(av[1], 0);
+	dup2(fd, 0);
+	dup2(p_fd[1], 1);
+	close(p_fd[0]);
+	exec(av[2], env);
+}
+
+void	parent(char **av, int *p_fd, char **env)
+{
+	int		fd;
+
+	fd = open_file(av[4], 1);
+	dup2(fd, 1);
+	dup2(p_fd[0], 0);
+	close(p_fd[1]);
+	exec(av[3], env);
+}
