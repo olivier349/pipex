@@ -31,6 +31,8 @@ as stdin for cmd1                                 as stdout for cmd2
 External functs.
 • open, close, read, write, malloc, free, perror, strerror, access, dup, dup2, execve, exit, fork, pipe, unlink, wait, waitpid
 
+https://reactive.so/post/42-a-comprehensive-guide-to-pipex
+
 void	child(char **av, int *p_fd, char **env)
 {
 	int		fd;
